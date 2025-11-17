@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>靈魂占卜室</title>
     <style>
-        body { font-family: 'Noto Sans TC', sans-serif; background-color: #1a002e; color: #f5eaff; text-align: center; }
+        body { font-family
         header { background: linear-gradient(90deg, #3a0057, #6a0dad); padding: 30px; font-size: 2em; font-weight: bold; color: #fff; }
         .card { background: rgba(255,255,255,0.1); border-radius: 15px; padding: 20px; margin: 20px auto; max-width: 600px; box-shadow: 0 4px 10px rgba(0,0,0,0.3); }
         button { background-color: #9b4dff; color: white; border: none; padding: 10px 20px; margin-top: 10px; border-radius: 10px; cursor: pointer; }
