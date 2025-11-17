@@ -1,35 +1,246 @@
 <!DOCTYPE html>
 <html lang="zh-Hant">
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>靈魂占卜室</title>
-    <style>
-        body { font-family
-        header { background: linear-gradient(90deg, #3a0057, #6a0dad); padding: 30px; font-size: 2em; font-weight: bold; color: #fff; }
-        .card { background: rgba(255,255,255,0.1); border-radius: 15px; padding: 20px; margin: 20px auto; max-width: 600px; box-shadow: 0 4px 10px rgba(0,0,0,0.3); }
-        button { background-color: #9b4dff; color: white; border: none; padding: 10px 20px; margin-top: 10px; border-radius: 10px; cursor: pointer; }
-        button:hover { background-color: #b366ff; }
-        footer { margin-top: 40px; font-size: 0.9em; color: #d6b3ff; }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>🔮 紫色夢幻塔羅占卜室 🔮</title>
+
+<style>
+    body {
+        font-family: "Noto Sans TC", sans-serif;
+        background: radial-gradient(circle at top, #4a0080, #1a0033 70%);
+        color: #f6e9ff;
+        text-align: center;
+        margin: 0;
+        padding: 0;
+    }
+
+    header {
+        padding: 30px;
+        font-size: 2.4em;
+        font-weight: bold;
+        background: linear-gradient(90deg, #7a00cc, #b066ff);
+        color: white;
+        text-shadow: 0 0 10px #eacbff;
+    }
+
+    .card-box {
+        background: rgba(255,255,255,0.1);
+        backdrop-filter: blur(6px);
+        margin: 30px auto;
+        padding: 25px;
+        width: 85%;
+        max-width: 650px;
+        border-radius: 18px;
+        box-shadow: 0 0 15px rgba(200,150,255,0.4);
+    }
+
+    button {
+        margin-top: 20px;
+        padding: 12px 28px;
+        border: none;
+        border-radius: 12px;
+        background: linear-gradient(135deg, #a566ff, #cfa5ff);
+        color: #fff;
+        font-size: 1.1em;
+        cursor: pointer;
+        box-shadow: 0 0 12px #bb88ff;
+        transition: 0.25s;
+    }
+
+    button:hover {
+        box-shadow: 0 0 18px #e4c2ff;
+        transform: scale(1.05);
+    }
+
+    .result {
+        font-size: 1.4em;
+        margin-top: 25px;
+        text-shadow: 0 0 8px #dcb3ff;
+    }
+
+    #meaning {
+        margin-top: 20px;
+        padding: 18px;
+        background: rgba(255,255,255,0.15);
+        border-radius: 14px;
+        line-height: 1.7;
+        box-shadow: 0 0 10px rgba(255,255,255,0.2);
+    }
+
+    footer {
+        margin-top: 40px;
+        padding: 20px;
+        font-size: 0.9em;
+        color: #d0a8ff;
+    }
+
+    /* 抽牌動畫 */
+    .fade-in {
+        animation: fadeIn 0.8s ease-out forwards;
+    }
+    @keyframes fadeIn {
+        from { opacity: 0; transform: translateY(15px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+</style>
 </head>
 <body>
-    <header>🔮 靈魂占卜室 🔮</header>
-    <div class="card">
-        <h2>今日塔羅指引</h2>
-        <p>按下按鈕以抽取你的命運之牌。</p>
-        <button onclick="drawCard()">抽一張牌</button>
-        <p id="result" style="margin-top: 20px; font-size: 1.2em;"></p>
-    </div>
-    <footer>本網站僅供娛樂參考，不構成專業建議。</footer>
 
-    <script>
-        const cards = ["愚者", "魔術師", "女祭司", "女皇", "皇帝", "戀人", "戰車", "力量", "隱者", "命運之輪", "正義", "吊人", "死神", "節制", "惡魔", "塔", "星星", "月亮", "太陽", "審判", "世界"];
-        function drawCard() {
-            const card = cards[Math.floor(Math.random() * cards.length)];
-            const reversed = Math.random() < 0.5 ? "正位" : "逆位";
-            document.getElementById("result").innerText = `你抽到了：${card}（${reversed}）`;
-        }
-    </script>
+<header>🔮 紫色夢幻塔羅占卜室 🔮</header>
+
+<div class="card-box">
+    <h2>今日塔羅指引 ✨</h2>
+    <p>深呼吸… 點擊下方按鈕抽取你的命運訊息。</p>
+
+    <button onclick="drawCard()">抽一張牌</button>
+
+    <div id="result" class="result"></div>
+    <div id="meaning"></div>
+    <p id="remaining" style="margin-top:15px;"></p>
+</div>
+
+<footer>本網站僅供心靈娛樂與反思，不構成專業建議。</footer>
+
+<script>
+/* --- 塔羅牌牌意（正位 + 逆位） --- */
+const tarot = {
+    "愚者": {
+        up: "新的旅程、無畏、勇於嘗試。你即將迎來新開始。",
+        rev: "衝動、冒險過度、缺乏計畫。需要更謹慎踏出下一步。"
+    },
+    "魔術師": {
+        up: "掌控資源、創造力與行動力，代表你可以實現願望。",
+        rev: "浪費能量、方向不明、計畫受阻。你需要重新聚焦。"
+    },
+    "女祭司": {
+        up: "直覺、內在智慧、隱藏的答案。相信你的感受。",
+        rev: "直覺失衡、被情緒誤導，需要冷靜思考。"
+    },
+    "女皇": {
+        up: "豐盛、愛、美與養育，生命即將迎來滋養與幸福。",
+        rev: "過度依賴、情緒失衡、壓力累積，需要自我照顧。"
+    },
+    "皇帝": {
+        up: "秩序、權威、控制與穩定。你能掌控局勢。",
+        rev: "固執、權力失衡、過度控制。放下執著能解困。"
+    },
+    "教皇": {
+        up: "傳統、指導、智慧，可能遇到貴人相助。",
+        rev: "反叛、打破規則、質疑體制，是突破的時機。"
+    },
+    "戀人": {
+        up: "愛、連結、選擇與和諧。關係或決策將迎來好消息。",
+        rev: "不一致、誤會、分歧。重要的是重新找回平衡。"
+    },
+    "戰車": {
+        up: "意志力、突破、勝利。你會戰勝困難。",
+        rev: "失控、懷疑自己、方向混亂。你需要重新掌舵。"
+    },
+    "力量": {
+        up: "內在力量、勇氣、溫柔的堅毅。你能平靜地克服挑戰。",
+        rev: "焦慮、自我懷疑、被情緒左右。請對自己溫柔。"
+    },
+    "隱者": {
+        up: "內省、智慧、獨處。答案在你的內心。",
+        rev: "孤立、逃避、停滯。你需要重新與世界連結。"
+    },
+    "命運之輪": {
+        up: "好運、轉機、命運流動。局勢將往有利方向發展。",
+        rev: "反覆、停滯、時機未到。耐心是關鍵。"
+    },
+    "正義": {
+        up: "公平、真相、因果平衡。你會得到合理結果。",
+        rev: "不公平、偏見、真相被隱藏。保持正直最重要。"
+    },
+    "吊人": {
+        up: "新的視角、轉化、犧牲。放下後你將獲得自由。",
+        rev: "停滯、抗拒改變、犧牲過度。你值得更好的平衡。"
+    },
+    "死神": {
+        up: "結束與重生，放下即將迎來全新階段。",
+        rev: "抗拒改變、舊習難改，可能延遲轉變。"
+    },
+    "節制": {
+        up: "平衡、療癒、和諧。慢慢來，一切都會好起來。",
+        rev: "失衡、衝突、失去步調。你需要重新調整。"
+    },
+    "惡魔": {
+        up: "誘惑、執著、物質綁架。看清假象才能解脫。",
+        rev: "解放、醒悟、擺脫束縛。你正在重獲自由。"
+    },
+    "塔": {
+        up: "劇變、崩解、重建。雖辛苦，但是真正的重生。",
+        rev: "延遲的變動、壓抑的危機。修補比崩壞更重要。"
+    },
+    "星星": {
+        up: "希望、靈感、療癒。宇宙正在對你微笑。",
+        rev: "失望、迷失、自信下降。星光仍在，別放棄。"
+    },
+    "月亮": {
+        up: "直覺、夢境、迷霧。你需要更敏銳地辨別真相。",
+        rev: "真相浮現、恐懼減輕，清晰逐漸到來。"
+    },
+    "太陽": {
+        up: "成功、喜悅、好運。你的光芒無人能擋。",
+        rev: "過度樂觀、迷失方向。調整步伐即可重回陽光。"
+    },
+    "審判": {
+        up: "覺醒、重生、領悟。你將做出重要的決定。",
+        rev: "逃避、自我懷疑。你比想像中更值得信任自己。"
+    },
+    "世界": {
+        up: "完成、圓滿、目標達成。你正走向人生的黃金時刻。",
+        rev: "未完成、延遲、不完整。還差一步就能成功！"
+    }
+};
+
+/* 22 張大阿卡納 */
+const deck = Object.keys(tarot);
+let remainingDeck = [...deck];
+
+/* 更新剩餘卡片顯示 */
+function updateRemaining() {
+    document.getElementById("remaining").innerText =
+        `剩餘可抽取的塔羅牌：${remainingDeck.length} 張`;
+}
+
+/* 抽牌 */
+function drawCard() {
+    const resultBox = document.getElementById("result");
+    const meaningBox = document.getElementById("meaning");
+
+    if (remainingDeck.length === 0) {
+        resultBox.innerHTML = "✨ 今天的卡片已抽完，明天再來探索吧！✨";
+        meaningBox.innerHTML = "";
+        return;
+    }
+
+    const index = Math.floor(Math.random() * remainingDeck.length);
+    const card = remainingDeck.splice(index, 1)[0];
+
+    const upright = Math.random() < 0.5;
+    const position = upright? "正位" : "逆位";
+    const meaning = upright? tarot[card].up : tarot[card].rev;
+
+    resultBox.innerHTML = `你抽到了：<b>${card}</b>（${position}）`;
+    meaningBox.innerHTML = meaning;
+
+    resultBox.classList.add("fade-in");
+    meaningBox.classList.add("fade-in");
+
+    setTimeout(() => {
+        resultBox.classList.remove("fade-in");
+        meaningBox.classList.remove("fade-in");
+    }, 900);
+
+    updateRemaining();
+}
+
+/* 初始顯示剩餘 */
+updateRemaining();
+
+</script>
 </body>
 </html>
+
